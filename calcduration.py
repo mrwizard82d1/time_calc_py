@@ -18,9 +18,15 @@ def calcDifference(date, time, previousDate, previousTime):
     hour, minute = splitTime( time )
     year, month, day = splitDate( date )
 
-    finis = datetime.datetime(hour=int(hour),
-                              minute=int(minute), year=int(year),
-                              month=int(month), day=int(day))
+    if int(hour) < 24:
+        finis = datetime.datetime(hour=int(hour),
+                                  minute=int(minute), year=int(year),
+                                  month=int(month), day=int(day))
+    else:
+        finis = datetime.datetime(hour=0,
+                                  minute=int(minute), year=int(year),
+                                  month=int(month), day=int(day) + 1)
+        
     
     hour, minute = splitTime( previousTime )
     year, month, day = splitDate( previousDate )
