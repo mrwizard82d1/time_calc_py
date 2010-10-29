@@ -3,6 +3,7 @@
 """Summarizes time into tasks."""
 
 
+import argparse
 from datetime import datetime
 import sys
 
@@ -33,13 +34,15 @@ def make_tasks(infile):
     # Create all the tasks
     task_lines = [l for l in infile.readlines() if len(l.strip()) > 0]
     result = [Task(l) for l in task_lines]
-    
 
     # End of each task is the start of the next task
     end_times = [t.start_time for t in result[1:]]
     for task_ndx in range(len(end_times)):
         result[task_ndx].end_time = end_times[task_ndx]
         
+    # Strip last "task."
+    result = result[:-1]
+    
     return result
 
 
@@ -64,5 +67,11 @@ def sum_time(tasks):
 
 
 if __name__ == '__main__':
-    infile = sys.stdin
-    print_summary(sum_time(make_tasks(infile)))
+    parser = argparse.ArgumentParser\
+        (description='Summarize tasks into activities')
+    parser.add_argument('infile', nargs='?',
+                        type=argparse.FileType('r'),
+                        help='File to read for input (default=stdin)',
+                        default=sys.stdin)
+    args = parser.parse_args()
+    print_summary(sum_time(make_tasks(args.infile)))
