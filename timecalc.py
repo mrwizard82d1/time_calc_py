@@ -20,6 +20,20 @@ class TimeCalculator(cmd.Cmd):
         self.stack.append(result)
         return result
 
+    def operate(self, operator):
+        """Execute operator on the values on my stack."""
+        operators = {'+': self.add, '-': self.subtract,}
+        y = self.stack.pop()
+        x = self.stack.pop()
+        result = operators[operator](x, y)
+        print(result)
+        
+    def push(self, value):
+        """Push the value onto my stack."""
+        h = value[:2]
+        m = value[2:]
+        self.stack.append(datetime.timedelta(hours=int(h), minutes=int(m)))
+
     def subtract(self, x, y):
         """Add the two values together pushing the result back on my stack."""
         result = x - y
@@ -27,37 +41,45 @@ class TimeCalculator(cmd.Cmd):
         return result
 
     def help_done(self):
-        print('quits the program')
+        print('Quits the program.')
     def do_done(self, line):
         return True
 
     def help_enter(self):
         print('Enter the next value.')
     def do_enter(self, value):
-        h = value[:2]
-        m = value[2:]
-        self.stack.append(datetime.timedelta(hours=int(h), minutes=int(m)))
+        self.push(value)
+
+    def help_expr(self):
+        print('Enter an (RPN) expression.')
+    def do_expr(self, value):
+        parts = value.split()
+        for part in parts[:-1]:
+            self.push(part)
+        self.operate(parts[-1])
+
+    def help_exit(self):
+        print('Quits the program.')
+    def do_exit(self, line):
+        return True
 
     def help_minus(self):
         print('Subtract the two values on the stack.')
     def do_minus(self, args):
-        y = self.stack.pop()
-        x = self.stack.pop()
-        result = self.subtract(x, y)
-        print(result)
+        self.operate('-')
 
     def help_plus(self):
         print('Add the two values on the stack.')
     def do_plus(self, args):
-        y = self.stack.pop()
-        x = self.stack.pop()
-        result = self.add(x, y)
-        print(result)
+        self.operate('+')
 
     def precmd(self, line):
         """Convert lines into actual commands."""
         result = line
-        if len(line) == 4:
+        parts = line.split()
+        if len(parts) > 1:
+            result = 'expr {}'.format(line)
+        elif len(line) == 4:
             try:
                 int(line)
                 result = 'enter {}'.format(line)
