@@ -1,0 +1,6 @@
+syntax: glob
+
+
+# Ignore input and output used to summary my time.
+summary.txt
+time.txt
