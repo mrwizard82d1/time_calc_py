@@ -20,6 +20,14 @@ class TimeCalculator(cmd.Cmd):
         self.stack.append(result)
         return result
 
+    def as_decimal(self):
+        """Convert the item at the top of my stack to decimal."""
+        delta = self.stack.pop()
+        self.stack.append(delta)
+        hours = delta.seconds // 3600
+        minutes = (delta.seconds % 3600) // 60
+        print("{:.1f}".format(hours + minutes / 60.0))
+
     def operate(self, operator):
         """Execute operator on the values on my stack."""
         operators = {'+': self.add, '-': self.subtract,}
@@ -39,6 +47,11 @@ class TimeCalculator(cmd.Cmd):
         result = x - y
         self.stack.append(result)
         return result
+
+    def help_dec(self):
+        print('Prints item on top of stack in decimal.')
+    def do_dec(self, value):
+        self.as_decimal()
 
     def help_done(self):
         print('Quits the program.')
