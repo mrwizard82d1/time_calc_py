@@ -75,7 +75,7 @@
 
 (defn write-summary [summary]
   (doseq [key (sort (keys summary))]
-    (printf "%-12s %4.2f\n" key (double (decimal-duration (summary key))))))
+    (printf "%-16s%.2f\n" key (double (decimal-duration (summary key))))))
 
 
 (defn main []
@@ -88,3 +88,6 @@
 		    
 (def tasks (make-tasks-contiguous
 	    (map make-task (lines (java.io.FileReader. "time.txt")))))
+
+
+(main)
