@@ -8,7 +8,7 @@
 
 (defn lines [in-stream]
   "Returns all the lines in-stream."
-  (line-seq (java.io.BufferedReader. in-stream)))
+  (filter #(not (empty? %1)) (line-seq (java.io.BufferedReader. in-stream))))
 
 
 (defn extract-int
